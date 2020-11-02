@@ -13,11 +13,11 @@ fn main() {
     // Argument parsing
     let args: Vec<_> = env::args().collect();
     match args.len() {
-        2 => {},
+        2 => {}
         _ => {
             println!("Usage: {} <path/to/file.svg>", args[0]);
             exit(1);
-        },
+        }
     };
 
     // Load file
@@ -26,7 +26,7 @@ fn main() {
     file.read_to_string(&mut s).unwrap();
 
     // Parse data
-    let polylines: Vec<Polyline> = svg2polylines::parse(&s).unwrap_or_else(|e| {
+    let polylines: Vec<Polyline> = svg2polylines::parse(&s, 0.15).unwrap_or_else(|e| {
         println!("Error: {}", e);
         exit(2);
     });
