@@ -27,6 +27,9 @@ use std::str;
 
 use log::trace;
 use lyon_geom::euclid::Point2D;
+use lyon_geom::euclid::Vector2D;
+use lyon_geom::ArcFlags;
+use lyon_geom::SvgArc;
 use lyon_geom::{CubicBezierSegment, QuadraticBezierSegment};
 use quick_xml::events::attributes::Attribute;
 use quick_xml::events::Event;
@@ -375,6 +378,42 @@ fn parse_path_segment(
                 }
             };
             for point in curve.flattened(tol) {
+                current_line.add_absolute(CoordinatePair::new(point.x, point.y));
+            }
+        }
+        &PathSegment::EllipticalArc {
+            abs,
+            rx,
+            ry,
+            x_axis_rotation,
+            large_arc,
+            sweep,
+            x,
+            y,
+        } => {
+            let current = current_line
+                .last_pair()
+                .ok_or("Invalid state: Quadratic on empty CurrentLine")?;
+
+            let arc: SvgArc<f64> = if abs {
+                lyon_geom::SvgArc {
+                    from: Point2D::new(current.x, current.y),
+                    to: Point2D::new(x, y),
+                    radii: Vector2D::new(rx, ry),
+                    x_rotation: euclid::Angle::radians(x_axis_rotation),
+                    flags: ArcFlags { large_arc, sweep },
+                }
+            } else {
+                lyon_geom::SvgArc {
+                    from: Point2D::new(current.x, current.y),
+                    to: Point2D::new(current.x + x, current.y + y),
+                    radii: Vector2D::new(rx, ry),
+                    x_rotation: euclid::Angle::radians(x_axis_rotation),
+                    flags: ArcFlags { large_arc, sweep },
+                }
+            };
+
+            for point in arc.to_arc().flattened(tol) {
                 current_line.add_absolute(CoordinatePair::new(point.x, point.y));
             }
         }
