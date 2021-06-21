@@ -400,7 +400,7 @@ fn parse_path_segment(
                     from: Point2D::new(current.x, current.y),
                     to: Point2D::new(x, y),
                     radii: Vector2D::new(rx, ry),
-                    x_rotation: euclid::Angle::radians(x_axis_rotation),
+                    x_rotation: lyon_geom::euclid::Angle::radians(x_axis_rotation),
                     flags: ArcFlags { large_arc, sweep },
                 }
             } else {
@@ -408,7 +408,7 @@ fn parse_path_segment(
                     from: Point2D::new(current.x, current.y),
                     to: Point2D::new(current.x + x, current.y + y),
                     radii: Vector2D::new(rx, ry),
-                    x_rotation: euclid::Angle::radians(x_axis_rotation),
+                    x_rotation: lyon_geom::euclid::Angle::radians(x_axis_rotation),
                     flags: ArcFlags { large_arc, sweep },
                 }
             };
