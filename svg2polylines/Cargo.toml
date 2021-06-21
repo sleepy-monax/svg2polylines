@@ -21,11 +21,10 @@ default = []
 
 [dependencies]
 log = "^0.4"
-lyon_geom = "0.12"
+lyon_geom = "0.17.2"
 quick-xml = "0.13"
 serde = { version = "1.0", optional = true, features = ["derive"] }
 svgtypes = "0.4"
-euclid="*"
 
 [dev-dependencies]
 env_logger = "^0.6"
